@@ -366,15 +366,16 @@ void TestMotor()
  }
 
 //	float pid_P = 40, pid_D = 0.5, pid_Y = 0.75;
-float target_angle = 0;
+float target_angle = -0.8;
 float delta_angle = 0;
 float summa_angle = 0;
 float pred_Angle = 0;     // Предыдущее значение угла отклонения
 
+static int pid_Pa = 40, pid_Ia = 0, pid_Da = 80;
+float reta;
+
 float PID_Angle(float angle_)
 {
-	static int pid_P = 50, pid_I = 0, pid_D = 100;
-	float ret;
 
 	delta_angle = angle_ - target_angle; //  Находим на сколько текщий угол отклоняеься от заданного
 	summa_angle = summa_angle + delta_angle; // Интегральная часть
@@ -390,23 +391,22 @@ float PID_Angle(float angle_)
 	//}
 
 	// Устанавливаем пропорцианальный и диференциальный коэффициент и умножаем на угол отклонения и на скорость изменения угла в градусах
-	ret = pid_P * delta_angle + (pid_I * summa_angle) + pid_D * (delta_angle - pred_Angle);
+	reta = pid_Pa * delta_angle + (pid_Ia * summa_angle) + pid_Da * (delta_angle - pred_Angle);
 	pred_Angle = delta_angle;                    // Запоминаем значение как предыдущее для следующего раза расчета
-	return ret;
+	return reta;
 
 }
 
 long summa_way = 0;
 
 float pred_Way = 0;     // Предыдущее значение пути
+float retw;
+static int pid_Pw = 100, pid_Iw = 0, pid_Dw = 250;
 
 float PID_Way(float way_)
 {															     
-	static int pid_P = 600, pid_I = 0, pid_D = 5000;
-	float ret;
-	
 	summa_way = summa_way + way_;			// Интегральная часть
-	ret = pid_P * way_ + (pid_I * summa_way) + pid_D * (way_ - pred_Way);   //Второй пид регултор по скорости
+	retw = pid_Pw * way_ + (pid_Iw * summa_way) + pid_Dw * (way_ - pred_Way);   //Второй пид регултор по скорости
 	pred_Way = way_;
-	return ret;
+	return retw;
 }

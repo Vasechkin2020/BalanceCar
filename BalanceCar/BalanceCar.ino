@@ -82,7 +82,7 @@ void loop()
 
 			sum_pwm = balance_pwm;        //только блансировка
 			sum_pwm = sum_pwm + Robot.Speed_average_pwm ;   // дополнительно учет скорости
-			//sum_pwm = sum_pwm + way_pwm;   // дополнительно второй пид регулятор по пути для возврата в точку балансировки
+			sum_pwm = sum_pwm + way_pwm;   // дополнительно второй пид регулятор по пути для возврата в точку балансировки
 
 			if (Robot.Angle_Complem > 30 || Robot.Angle_Complem < -30) sum_pwm = 0;         // Отключаем моторчики при большом наклоне
 

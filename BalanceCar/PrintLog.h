@@ -7,9 +7,9 @@ void PrintTelemetria()
 
 	//Serial.print(Robot.Speed_average); Serial.print(";");
 	//Serial.print(Robot.Speed_average_pwm); Serial.print(";");
-	Serial.print(Robot.Way_average); Serial.print("<=; ");
-	//Serial.print(Robot.Speed_average_pwm); Serial.print(";");
-	Serial.print(way_pwm,1); Serial.print(";    ");
+	Serial.print(Robot.Speed_raw,4); Serial.print("<=; ");
+	Serial.print(speed_pwm,4); Serial.print(";  sum_pwm=");
+
 	Serial.print(sum_pwm); Serial.print("; ");
 
 	//Serial.print(target_angle); Serial.print(";");

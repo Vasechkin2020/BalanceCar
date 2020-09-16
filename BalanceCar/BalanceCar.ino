@@ -8,6 +8,7 @@
 
 long balance_pwm = 0;
 float way_pwm = 0;
+float speed_pwm = 0;
 long position_pwm = 0;
 int32_t sum_pwm = 0;
 int sum_pwmL, sum_pwmR;  // Уточненный ШИМ на колесах с учетом что одно крутится быстрее другого даже при одинаковом ШИМ
@@ -70,7 +71,9 @@ void loop()
 		{
 			flag_timer_encoder = false;
 			Read_Encoder();
-			way_pwm = PID_Way(Robot.Way_average);	// Расчет ШИМ для компенсации по пути 
+			//way_pwm = PID_Way(Robot.Way_average);	// Расчет ШИМ для компенсации по пути 
+			speed_pwm = PID_Speed(Robot.Speed_raw);	// Расчет ШИМ для компенсации по скорости
+
 		}
 
 		if (flag_mpu6050 )
@@ -80,9 +83,10 @@ void loop()
 
 			balance_pwm = PID_Angle(Robot.Angle_Kalman); // Расчет ШИМ по углу отклонения	
 
-			sum_pwm = balance_pwm;        //только блансировка
-			sum_pwm = sum_pwm + Robot.Speed_average_pwm ;   // дополнительно учет скорости
-			sum_pwm = sum_pwm + way_pwm;   // дополнительно второй пид регулятор по пути для возврата в точку балансировки
+			sum_pwm = balance_pwm;        //только блансировка	
+			sum_pwm = sum_pwm + speed_pwm;   // дополнительно второй пид регулятор по скорости, чтобы стоял на месте
+			//sum_pwm = sum_pwm + Robot.Speed_average_pwm ;   // дополнительно учет (компенсация) скорости
+			//sum_pwm = sum_pwm + way_pwm;   // дополнительно второй пид регулятор по пути для возврата в точку балансировки
 
 			if (Robot.Angle_Complem > 30 || Robot.Angle_Complem < -30) sum_pwm = 0;         // Отключаем моторчики при большом наклоне
 

@@ -205,7 +205,9 @@ void Read_Encoder(void)
 	//Robot.way_l += (float)Robot.speed_L * intervalEncoder;		  // суммируем пройденный путь с момента запуска с учетом куда ехали вперед или назад
 	//Robot.way_r += (float)Robot.speed_R * intervalEncoder;		  // суммируем пройденный путь с момента запуска с учетом куда ехали вперед или назад
 
-	Robot.Speed_raw = (Robot.speed_L + Robot.speed_R)*0.5;		 // Скорость средняя по двум колесам
+	Robot.Speed_raw = (Robot.speed_L + Robot.speed_R);//*0.5;		 // Скорость средняя по двум колесам
+	Serial.print("Speed_raw= "); Serial.println(Robot.Speed_raw,4);
+
 	Robot.Speed_raw_pwm = map(Robot.Speed_raw * 100, -113, 113, -25500, 25500) / 100;     // Преобразование отфильтрованной скорости  в ШИМ умножаем на 100 так как функция работает тольео с целыми числами
 	Robot.Way_raw += Robot.Speed_raw * intervalEncoder; 		   // суммируем пройденный путь с момента запуска с учетом куда ехали вперед или назад
 
@@ -409,4 +411,17 @@ float PID_Way(float way_)
 	retw = pid_Pw * way_ + (pid_Iw * summa_way) + pid_Dw * (way_ - pred_Way);   //Второй пид регултор по скорости
 	pred_Way = way_;
 	return retw;
+}
+
+float summa_speed = 0;
+float rets;
+static int pid_Ps = 100, pid_Is = 3, pid_Ds = 0;
+float pred_Speed = 0;     // Предыдущее значение скорости
+
+float PID_Speed(float speed_)
+{
+	summa_speed += speed_;			// Интегральная часть
+	rets = pid_Ps * (0 + speed_) + (pid_Is * (0 + summa_speed)) + pid_Ds * (speed_ - pred_Speed);   //Второй пид регултор по скорости
+	pred_Speed = speed_;
+	return rets;
 }

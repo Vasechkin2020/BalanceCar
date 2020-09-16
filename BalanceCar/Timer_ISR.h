@@ -40,7 +40,7 @@ byte count_timer_telemetria = 0;
 ISR(TIMER1_COMPA_vect)         // Обработчик прерывания таймера 4 по совпадению A 	1 раз в 10 милисекунд
 {
 	count_timer_encoder++;
-	if (count_timer_encoder >= 5) // 50 milliseconds
+	if (count_timer_encoder >= 10) // 50 milliseconds
 	{
 		count_timer_encoder = 0;
 		flag_timer_encoder = true;
